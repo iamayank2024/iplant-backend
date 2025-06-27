@@ -5,6 +5,8 @@ const helmet = require("helmet");
 const dotenv = require("dotenv");
 const path = require("path");
 const morgan = require("morgan");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 const logger = require("./utils/logger");
 const requestLogger = require("./middleware/requestLogger");
 
@@ -38,6 +40,9 @@ app.use(morgan(morganFormat, { stream: logger.stream }));
 
 // Add custom request logger
 app.use(requestLogger);
+
+// Swagger Documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Static folder for uploads (if needed)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

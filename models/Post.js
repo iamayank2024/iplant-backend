@@ -1,5 +1,94 @@
 const mongoose = require("mongoose");
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       required:
+ *         - user
+ *         - image
+ *       properties:
+ *         user:
+ *           type: string
+ *           description: Reference to the user who created the post
+ *         image:
+ *           type: string
+ *           description: URL of the post image
+ *         caption:
+ *           type: string
+ *           description: Caption for the post
+ *         plantType:
+ *           type: string
+ *           description: Type of plant in the post
+ *         location:
+ *           type: object
+ *           properties:
+ *             type:
+ *               type: string
+ *               enum: [Point]
+ *             coordinates:
+ *               type: array
+ *               items:
+ *                 type: number
+ *             address:
+ *               type: string
+ *         likes:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Array of user IDs who liked the post
+ *         savedBy:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Array of user IDs who saved the post
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Timestamp when the post was created
+ *     PostResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         userName:
+ *           type: string
+ *         userAvatar:
+ *           type: string
+ *         caption:
+ *           type: string
+ *         imageUrl:
+ *           type: string
+ *         likes:
+ *           type: number
+ *         isLiked:
+ *           type: boolean
+ *         isSaved:
+ *           type: boolean
+ *         isCommented:
+ *           type: boolean
+ *         commentsCount:
+ *           type: number
+ *         plantType:
+ *           type: string
+ *         location:
+ *           type: object
+ *           properties:
+ *             coordinates:
+ *               type: array
+ *               items:
+ *                 type: number
+ *             address:
+ *               type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ */
+
 const PostSchema = new mongoose.Schema(
   {
     user: {
