@@ -19,12 +19,14 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8000",
-        description: "Development server",
-      },
-      {
-        url: "https://iplant-backend.vercel.app",
-        description: "Production server",
+        url:
+          process.env.NODE_ENV === "production"
+            ? "https://iplant-backend.vercel.app"
+            : "http://localhost:8000",
+        description:
+          process.env.NODE_ENV === "production"
+            ? "Production server"
+            : "Development server",
       },
     ],
     tags: [

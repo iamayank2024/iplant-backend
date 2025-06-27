@@ -34,15 +34,7 @@ app.use(
 // Configure Helmet with exceptions for Swagger UI
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "https:"],
-      },
-    },
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
 );
@@ -57,20 +49,24 @@ app.use(morgan(morganFormat, { stream: logger.stream }));
 // Add custom request logger
 app.use(requestLogger);
 
-// Serve Swagger UI assets with correct headers
+// Serve Swagger UI with custom configuration
 app.use(
   "/api-docs",
-  (req, res, next) => {
-    res.setHeader(
-      "Content-Security-Policy",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
-    );
-    next();
-  },
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     swaggerOptions: {
       persistAuthorization: true,
+      displayRequestDuration: true,
+      tryItOutEnabled: true,
+      filter: true,
+      deepLinking: true,
+      syntaxHighlight: {
+        theme: "monokai",
+      },
+      oauth2RedirectUrl:
+        process.env.NODE_ENV === "production"
+          ? "https://iplant-backend.vercel.app/api-docs/oauth2-redirect.html"
+          : "http://localhost:8000/api-docs/oauth2-redirect.html",
     },
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "iPlant API Documentation",
