@@ -30,7 +30,23 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(helmet());
+
+// Configure Helmet with exceptions for Swagger UI
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https:"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,8 +57,25 @@ app.use(morgan(morganFormat, { stream: logger.stream }));
 // Add custom request logger
 app.use(requestLogger);
 
-// Swagger Documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Serve Swagger UI assets with correct headers
+app.use(
+  "/api-docs",
+  (req, res, next) => {
+    res.setHeader(
+      "Content-Security-Policy",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+    );
+    next();
+  },
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "iPlant API Documentation",
+  })
+);
 
 // Static folder for uploads (if needed)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
