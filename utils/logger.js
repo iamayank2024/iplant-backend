@@ -1,12 +1,6 @@
 const winston = require("winston");
-const path = require("path");
-const fs = require("fs");
 
 // Create logs directory if it doesn't exist
-const logDir = "logs";
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
-}
 
 // Define log format
 const logFormat = winston.format.combine(
@@ -32,31 +26,7 @@ const logger = winston.createLogger({
   level: process.env.NODE_ENV === "production" ? "info" : "debug",
   format: logFormat,
   defaultMeta: { service: "iplant-api" },
-  transports: [
-    // Write logs with level 'error' and below to error.log
-    new winston.transports.File({
-      filename: path.join(logDir, "error.log"),
-      level: "error",
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    }),
-    // Write all logs to combined.log
-    new winston.transports.File({
-      filename: path.join(logDir, "combined.log"),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    }),
-  ],
-  exceptionHandlers: [
-    new winston.transports.File({
-      filename: path.join(logDir, "exceptions.log"),
-    }),
-  ],
-  rejectionHandlers: [
-    new winston.transports.File({
-      filename: path.join(logDir, "rejections.log"),
-    }),
-  ],
+  transports: [new winston.transports.Console()],
 });
 
 // Add console transport for non-production environments
