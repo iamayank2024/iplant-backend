@@ -29,7 +29,7 @@ router.post(
 router.post(
   "/profile",
   protect,
-  upload.single("image"),
+  upload.single("avatar"),
   handleMulterErrors,
   uploadProfileImage
 );

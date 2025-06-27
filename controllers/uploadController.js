@@ -126,7 +126,7 @@ const uploadProfileImage = async (req, res, next) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const { type } = req.query; // 'avatar' or 'cover'
+    const type = req.body.type;
 
     if (!type || (type !== "avatar" && type !== "cover")) {
       return res.status(400).json({
